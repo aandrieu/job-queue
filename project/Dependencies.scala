@@ -28,7 +28,8 @@ object Dependencies {
   )
 
   lazy val config = Seq(
-    "com.typesafe" % "config" % configVersion
+    "com.typesafe"        % "config"                 % configVersion,
+    "com.github.andyglow" %% "typesafe-config-scala" % "1.0.1"
   )
 
   lazy val doobie = Seq(
@@ -49,14 +50,19 @@ object Dependencies {
 
   lazy val common = circe ++ catsEffect ++ config ++ logging
 
-  lazy val core = common ++ akka
+  lazy val core = common
 
   lazy val pgCore = common ++ postgres ++ doobie
 
-  lazy val example = common ++ postgres
+  lazy val example = common ++ postgres ++ Seq(
+    "org.http4s" %% "http4s-dsl"          % "0.21.0-M6",
+    "org.http4s" %% "http4s-blaze-client" % "0.21.0-M6"
+  )
 
   lazy val macros = Seq(
     "org.scala-lang" % "scala-reflect"  % macrosVersion,
     "org.scala-lang" % "scala-compiler" % macrosVersion % Provided
   )
+
+  lazy val worker = common ++ akka
 }

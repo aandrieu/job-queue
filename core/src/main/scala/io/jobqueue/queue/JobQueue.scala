@@ -16,7 +16,13 @@ trait JobQueue[J <: Job] {
 
   def next(
     selection: Selection = Selection.all
-  ): IO[Option[JobRef[J]]]
+  ): IO[Option[JobRef[J]]] =
+    nextBatch(size = 1, selection).map(_.headOption)
+
+  def nextBatch(
+    size:      Int,
+    selection: Selection = Selection.all
+  ): IO[List[JobRef[J]]]
 
   def release(jobRef: JobRef[J]): IO[NotUsed]
 }

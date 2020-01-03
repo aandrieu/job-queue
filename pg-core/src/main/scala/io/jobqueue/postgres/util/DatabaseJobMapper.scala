@@ -1,6 +1,5 @@
 package io.jobqueue.postgres.util
 
-import io.jobqueue.job.internal.{ JobContextImpl, JobRefImpl }
 import io.jobqueue.job.{ Job, JobConfiguration, JobId, JobRef, JsonJob }
 import io.jobqueue.postgres.model.{ DatabaseIdentifiedJob, DatabaseJob }
 import io.jobqueue.queue.{ JobDecoder, JobEncoder }
@@ -21,22 +20,18 @@ private[postgres] class DatabaseJobMapper[J <: Job](
     )
   }
 
-  def toJobRef(databaseIdentifiedJob: Option[DatabaseIdentifiedJob]): Option[JobRef[J]] =
-    databaseIdentifiedJob.map(toJobRef)
-
-  private def toJobRef(databaseIdentifiedJob: DatabaseIdentifiedJob): JobRef[J] = {
+  def toJobRef(databaseIdentifiedJob: DatabaseIdentifiedJob): JobRef[J] = {
     val jsonJob = JsonJob(
       databaseIdentifiedJob.name,
       databaseIdentifiedJob.params
     )
     val job = decoder.decode(jsonJob)
-    JobRefImpl(
+    JobRef(
+      JobId(databaseIdentifiedJob.id),
+      databaseIdentifiedJob.enqueuedAt,
+      JobConfiguration.default,
       job,
-      JobContextImpl(
-        JobId(databaseIdentifiedJob.id),
-        databaseIdentifiedJob.enqueuedAt,
-        JobConfiguration.default
-      )
+      jsonJob
     )
   }
 }

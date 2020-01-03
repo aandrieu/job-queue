@@ -8,21 +8,21 @@ private[jobqueue] class JsonLogger(logger: Logger) {
   def debug(
     message: String,
     info:    Map[String, Any] = Map.empty,
-    context: Option[Context] = None
+    context: Option[LogContext] = None
   ): Unit =
     logger.debug(message, toArguments(info, context): _*)
 
   def info(
     message: String,
     info:    Map[String, Any] = Map.empty,
-    context: Option[Context] = None
+    context: Option[LogContext] = None
   ): Unit =
     logger.info(message, toArguments(info, context): _*)
 
   def warn(
     message: String,
     info:    Map[String, Any] = Map.empty,
-    context: Option[Context] = None
+    context: Option[LogContext] = None
   ): Unit =
     logger.warn(message, toArguments(info, context): _*)
 
@@ -30,13 +30,13 @@ private[jobqueue] class JsonLogger(logger: Logger) {
     message:   String,
     throwable: Option[Throwable] = None,
     info:      Map[String, Any] = Map.empty,
-    context:   Option[Context] = None
+    context:   Option[LogContext] = None
   ): Unit =
     logger.error(message, toArguments(info, context, throwable): _*)
 
   private def toArguments(
     info:      Map[String, Any] = Map.empty,
-    context:   Option[Context] = None,
+    context:   Option[LogContext] = None,
     throwable: Option[Throwable] = None
   ): List[StructuredArgument] = {
     val argumentsMap =

@@ -4,10 +4,9 @@ import cats.effect.IO
 import example.Postgres
 import io.circe.Json
 import io.jobqueue.NotUsed
-import io.jobqueue.job.{ Job, JobContext, JsonJob }
+import io.jobqueue.job.{ ExecutionResult, Job, JobContext, JsonJob }
 import io.jobqueue.postgres.PgJobQueue
 import io.jobqueue.queue.{ JobDecoder, JobEncoder }
-import io.jobqueue.worker.ExecutionResult
 
 /**
   * The simple flow where everything is done by hand to

@@ -24,6 +24,7 @@ lazy val root = (project in file("."))
     core,
     pg_core,
     macros,
+    worker,
     example
   )
   .settings(commonSettings)
@@ -55,6 +56,14 @@ lazy val macros = (project in file("macros"))
     core
   )
 
+lazy val worker = (project in file("worker"))
+  .settings(name := "worker")
+  .settings(commonSettings)
+  .settings(libraryDependencies := Dependencies.worker)
+  .dependsOn(
+    core
+  )
+
 lazy val example = (project in file("example"))
   .settings(name := "example")
   .settings(commonSettings)
@@ -62,5 +71,6 @@ lazy val example = (project in file("example"))
   .dependsOn(
     core,
     pg_core,
-    macros
+    macros,
+    worker
   )

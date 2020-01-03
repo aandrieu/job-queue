@@ -5,11 +5,10 @@ import example.Postgres
 import io.circe.generic.JsonCodec
 import io.jobqueue.NotUsed
 import io.jobqueue.derivation.{ DeriveJobDecoder, DeriveJobEncoder, JobsNameFor }
-import io.jobqueue.job.{ Job, JobContext }
+import io.jobqueue.job.{ ExecutionResult, Job, JobContext }
 import io.jobqueue.postgres.PgJobQueue
 import io.jobqueue.selection.Criteria._
 import io.jobqueue.selection.syntax._
-import io.jobqueue.worker.ExecutionResult
 
 /**
   * The basic flow when using use the library with auto generation of code.

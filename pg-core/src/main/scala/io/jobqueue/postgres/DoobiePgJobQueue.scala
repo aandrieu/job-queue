@@ -45,18 +45,23 @@ private[postgres] class DoobiePgJobQueue[J <: Job](
     }
   }
 
-  override def next(selection: Selection = Selection.all): IO[Option[JobRef[J]]] =
+  override def nextBatch(
+    size:      Int,
+    selection: Selection = Selection.all
+  ): IO[List[JobRef[J]]] = {
+    require(size > 0, "size must be positive")
     transactor.use { xa =>
       jobQueueRepository
-        .next(selection)
-        .map(jobMapper.toJobRef)
+        .nextBatch(size, selection)
+        .map(_.map(jobMapper.toJobRef))
         .transact(xa)
     }
+  }
 
   override def release(jobRef: JobRef[J]): IO[NotUsed] =
     transactor.use { xa =>
       jobQueueRepository
-        .release(jobRef.context.jobId)
+        .release(jobRef.jobId)
         .map(_ => NotUsed)
         .transact(xa)
     }

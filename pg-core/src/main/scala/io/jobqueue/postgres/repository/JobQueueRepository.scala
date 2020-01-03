@@ -29,7 +29,7 @@ private[postgres] class JobQueueRepository(
       .lastOrError
   }
 
-  def next(selection: Selection): ConnectionIO[Option[DatabaseIdentifiedJob]] = {
+  def nextBatch(size: Int, selection: Selection): ConnectionIO[List[DatabaseIdentifiedJob]] = {
     val whereClause = if (selection.selectors.nonEmpty) {
       val sqlSelection = sqlSelectionCompiler.compile(selection)
       s"WHERE $sqlSelection"
@@ -43,11 +43,11 @@ private[postgres] class JobQueueRepository(
          |FROM "${Schema.jobTable}"
          |$whereClause
          |ORDER BY enqueued_at
-         |LIMIT 1
+         |LIMIT $size
          |FOR UPDATE OF "${Schema.jobTable}" SKIP LOCKED;
          |""".stripMargin
 
-    Query0[DatabaseIdentifiedJob](sql).stream.compile.last
+    Query0[DatabaseIdentifiedJob](sql).stream.compile.toList
   }
 
   def release(jobId: JobId): ConnectionIO[Int] = {

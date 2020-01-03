@@ -1,4 +1,4 @@
-package io.jobqueue.worker
+package io.jobqueue.job
 
 sealed trait ExecutionResult
 
